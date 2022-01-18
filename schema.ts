@@ -7,7 +7,7 @@ import {
   timestamp,
   select,
   image,
-  float
+  decimal
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { Lists } from '.keystone/types';
@@ -38,6 +38,12 @@ export const lists: Lists = {
         ],
       }),
       productImage: image(),
+      price: decimal({
+        precision: 7,
+        scale: 2,
+        db: { map: 'product_price' },
+      }),
+      createdOn: timestamp(),
     },
   }),
-  }
+}  
