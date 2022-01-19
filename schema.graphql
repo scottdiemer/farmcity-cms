@@ -132,8 +132,8 @@ type Product {
   name: String
   description: Product_description_Document
   productImage: ImageFieldOutput
+  size: String
   price: Decimal
-  createdOn: DateTime
 }
 
 type Product_description_Document {
@@ -159,11 +159,9 @@ enum ImageExtension {
 
 scalar Decimal
 
-scalar DateTime
-  @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
-
 input ProductWhereUniqueInput {
   id: ID
+  size: String
 }
 
 type LocalImageFieldOutput implements ImageFieldOutput {
@@ -192,8 +190,8 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
+  size: StringFilter
   price: DecimalNullableFilter
-  createdOn: DateTimeNullableFilter
 }
 
 input DecimalNullableFilter {
@@ -207,30 +205,19 @@ input DecimalNullableFilter {
   not: DecimalNullableFilter
 }
 
-input DateTimeNullableFilter {
-  equals: DateTime
-  in: [DateTime!]
-  notIn: [DateTime!]
-  lt: DateTime
-  lte: DateTime
-  gt: DateTime
-  gte: DateTime
-  not: DateTimeNullableFilter
-}
-
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  size: OrderDirection
   price: OrderDirection
-  createdOn: OrderDirection
 }
 
 input ProductUpdateInput {
   name: String
   description: JSON
   productImage: ImageFieldInput
+  size: String
   price: Decimal
-  createdOn: DateTime
 }
 
 input ImageFieldInput {
@@ -252,8 +239,8 @@ input ProductCreateInput {
   name: String
   description: JSON
   productImage: ImageFieldInput
+  size: String
   price: Decimal
-  createdOn: DateTime
 }
 
 """

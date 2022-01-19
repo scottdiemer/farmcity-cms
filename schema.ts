@@ -4,8 +4,6 @@ import {
   text,
   relationship,
   password,
-  timestamp,
-  select,
   image,
   decimal
 } from '@keystone-6/core/fields';
@@ -38,12 +36,12 @@ export const lists: Lists = {
         ],
       }),
       productImage: image(),
+      size: text({isIndexed: 'unique'}),
       price: decimal({
         precision: 7,
         scale: 2,
         db: { map: 'product_price' },
       }),
-      createdOn: timestamp(),
     },
   }),
 }  

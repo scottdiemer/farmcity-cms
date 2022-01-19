@@ -21,15 +21,15 @@ model User {
 }
 
 model Product {
-  id                     String    @id @default(cuid())
-  name                   String    @default("")
-  description            Json      @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                     String   @id @default(cuid())
+  name                   String   @default("")
+  description            Json     @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   productImage_filesize  Int?
   productImage_extension String?
   productImage_width     Int?
   productImage_height    Int?
   productImage_mode      String?
   productImage_id        String?
-  price                  Decimal?  @map("product_price") @postgresql.Decimal(7, 2)
-  createdOn              DateTime?
+  size                   String   @unique @default("")
+  price                  Decimal? @map("product_price") @postgresql.Decimal(7, 2)
 }
