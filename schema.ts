@@ -5,7 +5,8 @@ import {
   relationship,
   password,
   image,
-  decimal
+  decimal,
+  checkbox
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { Lists } from '.keystone/types';
@@ -36,12 +37,25 @@ export const lists: Lists = {
         ],
       }),
       productImage: image(),
-      size: text({isIndexed: 'unique'}),
+      sizes: relationship({ ref: 'ProductSize.products', many: true }),
       price: decimal({
         precision: 7,
         scale: 2,
         db: { map: 'product_price' },
       }),
+      onSale: checkbox(),
+      salePrice: decimal({
+        precision: 7,
+        scale: 2,
+        db: { map: 'sale_price' },
+      }),
     },
   }),
+  ProductSize: list({
+    fields: {
+      type: text(),
+      unit: text(),
+      products: relationship({ ref: 'Product.sizes', many: true  })
+    }
+  })
 }  

@@ -132,8 +132,16 @@ type Product {
   name: String
   description: Product_description_Document
   productImage: ImageFieldOutput
-  size: String
+  sizes(
+    where: ProductSizeWhereInput! = {}
+    orderBy: [ProductSizeOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [ProductSize!]
+  sizesCount(where: ProductSizeWhereInput! = {}): Int
   price: Decimal
+  onSale: Boolean
+  salePrice: Decimal
 }
 
 type Product_description_Document {
@@ -161,7 +169,6 @@ scalar Decimal
 
 input ProductWhereUniqueInput {
   id: ID
-  size: String
 }
 
 type LocalImageFieldOutput implements ImageFieldOutput {
@@ -190,8 +197,16 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
-  size: StringFilter
+  sizes: ProductSizeManyRelationFilter
   price: DecimalNullableFilter
+  onSale: BooleanFilter
+  salePrice: DecimalNullableFilter
+}
+
+input ProductSizeManyRelationFilter {
+  every: ProductSizeWhereInput
+  some: ProductSizeWhereInput
+  none: ProductSizeWhereInput
 }
 
 input DecimalNullableFilter {
@@ -205,19 +220,27 @@ input DecimalNullableFilter {
   not: DecimalNullableFilter
 }
 
+input BooleanFilter {
+  equals: Boolean
+  not: BooleanFilter
+}
+
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
-  size: OrderDirection
   price: OrderDirection
+  onSale: OrderDirection
+  salePrice: OrderDirection
 }
 
 input ProductUpdateInput {
   name: String
   description: JSON
   productImage: ImageFieldInput
-  size: String
+  sizes: ProductSizeRelateToManyForUpdateInput
   price: Decimal
+  onSale: Boolean
+  salePrice: Decimal
 }
 
 input ImageFieldInput {
@@ -230,6 +253,13 @@ The `Upload` scalar type represents a file upload.
 """
 scalar Upload
 
+input ProductSizeRelateToManyForUpdateInput {
+  disconnect: [ProductSizeWhereUniqueInput!]
+  set: [ProductSizeWhereUniqueInput!]
+  create: [ProductSizeCreateInput!]
+  connect: [ProductSizeWhereUniqueInput!]
+}
+
 input ProductUpdateArgs {
   where: ProductWhereUniqueInput!
   data: ProductUpdateInput!
@@ -239,8 +269,83 @@ input ProductCreateInput {
   name: String
   description: JSON
   productImage: ImageFieldInput
-  size: String
+  sizes: ProductSizeRelateToManyForCreateInput
   price: Decimal
+  onSale: Boolean
+  salePrice: Decimal
+}
+
+input ProductSizeRelateToManyForCreateInput {
+  create: [ProductSizeCreateInput!]
+  connect: [ProductSizeWhereUniqueInput!]
+}
+
+type ProductSize {
+  id: ID!
+  type: String
+  unit: String
+  products(
+    where: ProductWhereInput! = {}
+    orderBy: [ProductOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Product!]
+  productsCount(where: ProductWhereInput! = {}): Int
+}
+
+input ProductSizeWhereUniqueInput {
+  id: ID
+}
+
+input ProductSizeWhereInput {
+  AND: [ProductSizeWhereInput!]
+  OR: [ProductSizeWhereInput!]
+  NOT: [ProductSizeWhereInput!]
+  id: IDFilter
+  type: StringFilter
+  unit: StringFilter
+  products: ProductManyRelationFilter
+}
+
+input ProductManyRelationFilter {
+  every: ProductWhereInput
+  some: ProductWhereInput
+  none: ProductWhereInput
+}
+
+input ProductSizeOrderByInput {
+  id: OrderDirection
+  type: OrderDirection
+  unit: OrderDirection
+}
+
+input ProductSizeUpdateInput {
+  type: String
+  unit: String
+  products: ProductRelateToManyForUpdateInput
+}
+
+input ProductRelateToManyForUpdateInput {
+  disconnect: [ProductWhereUniqueInput!]
+  set: [ProductWhereUniqueInput!]
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
+}
+
+input ProductSizeUpdateArgs {
+  where: ProductSizeWhereUniqueInput!
+  data: ProductSizeUpdateInput!
+}
+
+input ProductSizeCreateInput {
+  type: String
+  unit: String
+  products: ProductRelateToManyForCreateInput
+}
+
+input ProductRelateToManyForCreateInput {
+  create: [ProductCreateInput!]
+  connect: [ProductWhereUniqueInput!]
 }
 
 """
@@ -267,6 +372,15 @@ type Mutation {
   updateProducts(data: [ProductUpdateArgs!]!): [Product]
   deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteProducts(where: [ProductWhereUniqueInput!]!): [Product]
+  createProductSize(data: ProductSizeCreateInput!): ProductSize
+  createProductSizes(data: [ProductSizeCreateInput!]!): [ProductSize]
+  updateProductSize(
+    where: ProductSizeWhereUniqueInput!
+    data: ProductSizeUpdateInput!
+  ): ProductSize
+  updateProductSizes(data: [ProductSizeUpdateArgs!]!): [ProductSize]
+  deleteProductSize(where: ProductSizeWhereUniqueInput!): ProductSize
+  deleteProductSizes(where: [ProductSizeWhereUniqueInput!]!): [ProductSize]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -313,6 +427,14 @@ type Query {
   ): [Product!]
   product(where: ProductWhereUniqueInput!): Product
   productsCount(where: ProductWhereInput! = {}): Int
+  productSizes(
+    where: ProductSizeWhereInput! = {}
+    orderBy: [ProductSizeOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [ProductSize!]
+  productSize(where: ProductSizeWhereUniqueInput!): ProductSize
+  productSizesCount(where: ProductSizeWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
