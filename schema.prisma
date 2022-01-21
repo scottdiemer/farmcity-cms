@@ -21,24 +21,31 @@ model User {
 }
 
 model Product {
-  id                     String        @id @default(cuid())
-  name                   String        @default("")
-  description            Json          @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                     String             @id @default(cuid())
+  name                   String             @default("")
+  description            Json               @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   productImage_filesize  Int?
   productImage_extension String?
   productImage_width     Int?
   productImage_height    Int?
   productImage_mode      String?
   productImage_id        String?
-  sizes                  ProductSize[] @relation("Product_sizes")
-  price                  Decimal?      @map("product_price") @postgresql.Decimal(7, 2)
-  onSale                 Boolean       @default(false)
-  salePrice              Decimal?      @map("sale_price") @postgresql.Decimal(7, 2)
+  attributes             ProductAttribute[] @relation("Product_attributes")
+  price                  Decimal?           @map("product_price") @postgresql.Decimal(7, 2)
 }
 
-model ProductSize {
-  id       String    @id @default(cuid())
-  type     String    @default("")
-  unit     String    @default("")
-  products Product[] @relation("Product_sizes")
+model Attribute {
+  id                              String             @id @default(cuid())
+  name                            String             @default("")
+  from_ProductAttribute_attribute ProductAttribute[] @relation("ProductAttribute_attribute")
+}
+
+model ProductAttribute {
+  id                      String     @id @default(cuid())
+  attribute               Attribute? @relation("ProductAttribute_attribute", fields: [attributeId], references: [id])
+  attributeId             String?    @map("attribute")
+  value                   String     @unique @default("")
+  from_Product_attributes Product[]  @relation("Product_attributes")
+
+  @@index([attributeId])
 }

@@ -132,16 +132,14 @@ type Product {
   name: String
   description: Product_description_Document
   productImage: ImageFieldOutput
-  sizes(
-    where: ProductSizeWhereInput! = {}
-    orderBy: [ProductSizeOrderByInput!]! = []
+  attributes(
+    where: ProductAttributeWhereInput! = {}
+    orderBy: [ProductAttributeOrderByInput!]! = []
     take: Int
     skip: Int! = 0
-  ): [ProductSize!]
-  sizesCount(where: ProductSizeWhereInput! = {}): Int
+  ): [ProductAttribute!]
+  attributesCount(where: ProductAttributeWhereInput! = {}): Int
   price: Decimal
-  onSale: Boolean
-  salePrice: Decimal
 }
 
 type Product_description_Document {
@@ -197,16 +195,14 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
-  sizes: ProductSizeManyRelationFilter
+  attributes: ProductAttributeManyRelationFilter
   price: DecimalNullableFilter
-  onSale: BooleanFilter
-  salePrice: DecimalNullableFilter
 }
 
-input ProductSizeManyRelationFilter {
-  every: ProductSizeWhereInput
-  some: ProductSizeWhereInput
-  none: ProductSizeWhereInput
+input ProductAttributeManyRelationFilter {
+  every: ProductAttributeWhereInput
+  some: ProductAttributeWhereInput
+  none: ProductAttributeWhereInput
 }
 
 input DecimalNullableFilter {
@@ -220,27 +216,18 @@ input DecimalNullableFilter {
   not: DecimalNullableFilter
 }
 
-input BooleanFilter {
-  equals: Boolean
-  not: BooleanFilter
-}
-
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
   price: OrderDirection
-  onSale: OrderDirection
-  salePrice: OrderDirection
 }
 
 input ProductUpdateInput {
   name: String
   description: JSON
   productImage: ImageFieldInput
-  sizes: ProductSizeRelateToManyForUpdateInput
+  attributes: ProductAttributeRelateToManyForUpdateInput
   price: Decimal
-  onSale: Boolean
-  salePrice: Decimal
 }
 
 input ImageFieldInput {
@@ -253,11 +240,11 @@ The `Upload` scalar type represents a file upload.
 """
 scalar Upload
 
-input ProductSizeRelateToManyForUpdateInput {
-  disconnect: [ProductSizeWhereUniqueInput!]
-  set: [ProductSizeWhereUniqueInput!]
-  create: [ProductSizeCreateInput!]
-  connect: [ProductSizeWhereUniqueInput!]
+input ProductAttributeRelateToManyForUpdateInput {
+  disconnect: [ProductAttributeWhereUniqueInput!]
+  set: [ProductAttributeWhereUniqueInput!]
+  create: [ProductAttributeCreateInput!]
+  connect: [ProductAttributeWhereUniqueInput!]
 }
 
 input ProductUpdateArgs {
@@ -269,83 +256,99 @@ input ProductCreateInput {
   name: String
   description: JSON
   productImage: ImageFieldInput
-  sizes: ProductSizeRelateToManyForCreateInput
+  attributes: ProductAttributeRelateToManyForCreateInput
   price: Decimal
-  onSale: Boolean
-  salePrice: Decimal
 }
 
-input ProductSizeRelateToManyForCreateInput {
-  create: [ProductSizeCreateInput!]
-  connect: [ProductSizeWhereUniqueInput!]
+input ProductAttributeRelateToManyForCreateInput {
+  create: [ProductAttributeCreateInput!]
+  connect: [ProductAttributeWhereUniqueInput!]
 }
 
-type ProductSize {
+type Attribute {
   id: ID!
-  type: String
-  unit: String
-  products(
-    where: ProductWhereInput! = {}
-    orderBy: [ProductOrderByInput!]! = []
-    take: Int
-    skip: Int! = 0
-  ): [Product!]
-  productsCount(where: ProductWhereInput! = {}): Int
+  name: String
 }
 
-input ProductSizeWhereUniqueInput {
+input AttributeWhereUniqueInput {
   id: ID
 }
 
-input ProductSizeWhereInput {
-  AND: [ProductSizeWhereInput!]
-  OR: [ProductSizeWhereInput!]
-  NOT: [ProductSizeWhereInput!]
+input AttributeWhereInput {
+  AND: [AttributeWhereInput!]
+  OR: [AttributeWhereInput!]
+  NOT: [AttributeWhereInput!]
   id: IDFilter
-  type: StringFilter
-  unit: StringFilter
-  products: ProductManyRelationFilter
+  name: StringFilter
 }
 
-input ProductManyRelationFilter {
-  every: ProductWhereInput
-  some: ProductWhereInput
-  none: ProductWhereInput
-}
-
-input ProductSizeOrderByInput {
+input AttributeOrderByInput {
   id: OrderDirection
-  type: OrderDirection
-  unit: OrderDirection
+  name: OrderDirection
 }
 
-input ProductSizeUpdateInput {
-  type: String
-  unit: String
-  products: ProductRelateToManyForUpdateInput
+input AttributeUpdateInput {
+  name: String
 }
 
-input ProductRelateToManyForUpdateInput {
-  disconnect: [ProductWhereUniqueInput!]
-  set: [ProductWhereUniqueInput!]
-  create: [ProductCreateInput!]
-  connect: [ProductWhereUniqueInput!]
+input AttributeUpdateArgs {
+  where: AttributeWhereUniqueInput!
+  data: AttributeUpdateInput!
 }
 
-input ProductSizeUpdateArgs {
-  where: ProductSizeWhereUniqueInput!
-  data: ProductSizeUpdateInput!
+input AttributeCreateInput {
+  name: String
 }
 
-input ProductSizeCreateInput {
-  type: String
-  unit: String
-  products: ProductRelateToManyForCreateInput
+type ProductAttribute {
+  id: ID!
+  attribute: Attribute
+  value: String
 }
 
-input ProductRelateToManyForCreateInput {
-  create: [ProductCreateInput!]
-  connect: [ProductWhereUniqueInput!]
+input ProductAttributeWhereUniqueInput {
+  id: ID
+  value: String
+}
+
+input ProductAttributeWhereInput {
+  AND: [ProductAttributeWhereInput!]
+  OR: [ProductAttributeWhereInput!]
+  NOT: [ProductAttributeWhereInput!]
+  id: IDFilter
+  attribute: AttributeWhereInput
+  value: StringFilter
+}
+
+input ProductAttributeOrderByInput {
+  id: OrderDirection
+  value: OrderDirection
+}
+
+input ProductAttributeUpdateInput {
+  attribute: AttributeRelateToOneForUpdateInput
+  value: String
+}
+
+input AttributeRelateToOneForUpdateInput {
+  create: AttributeCreateInput
+  connect: AttributeWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ProductAttributeUpdateArgs {
+  where: ProductAttributeWhereUniqueInput!
+  data: ProductAttributeUpdateInput!
+}
+
+input ProductAttributeCreateInput {
+  attribute: AttributeRelateToOneForCreateInput
+  value: String
+}
+
+input AttributeRelateToOneForCreateInput {
+  create: AttributeCreateInput
+  connect: AttributeWhereUniqueInput
 }
 
 """
@@ -372,15 +375,32 @@ type Mutation {
   updateProducts(data: [ProductUpdateArgs!]!): [Product]
   deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteProducts(where: [ProductWhereUniqueInput!]!): [Product]
-  createProductSize(data: ProductSizeCreateInput!): ProductSize
-  createProductSizes(data: [ProductSizeCreateInput!]!): [ProductSize]
-  updateProductSize(
-    where: ProductSizeWhereUniqueInput!
-    data: ProductSizeUpdateInput!
-  ): ProductSize
-  updateProductSizes(data: [ProductSizeUpdateArgs!]!): [ProductSize]
-  deleteProductSize(where: ProductSizeWhereUniqueInput!): ProductSize
-  deleteProductSizes(where: [ProductSizeWhereUniqueInput!]!): [ProductSize]
+  createAttribute(data: AttributeCreateInput!): Attribute
+  createAttributes(data: [AttributeCreateInput!]!): [Attribute]
+  updateAttribute(
+    where: AttributeWhereUniqueInput!
+    data: AttributeUpdateInput!
+  ): Attribute
+  updateAttributes(data: [AttributeUpdateArgs!]!): [Attribute]
+  deleteAttribute(where: AttributeWhereUniqueInput!): Attribute
+  deleteAttributes(where: [AttributeWhereUniqueInput!]!): [Attribute]
+  createProductAttribute(data: ProductAttributeCreateInput!): ProductAttribute
+  createProductAttributes(
+    data: [ProductAttributeCreateInput!]!
+  ): [ProductAttribute]
+  updateProductAttribute(
+    where: ProductAttributeWhereUniqueInput!
+    data: ProductAttributeUpdateInput!
+  ): ProductAttribute
+  updateProductAttributes(
+    data: [ProductAttributeUpdateArgs!]!
+  ): [ProductAttribute]
+  deleteProductAttribute(
+    where: ProductAttributeWhereUniqueInput!
+  ): ProductAttribute
+  deleteProductAttributes(
+    where: [ProductAttributeWhereUniqueInput!]!
+  ): [ProductAttribute]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -427,14 +447,22 @@ type Query {
   ): [Product!]
   product(where: ProductWhereUniqueInput!): Product
   productsCount(where: ProductWhereInput! = {}): Int
-  productSizes(
-    where: ProductSizeWhereInput! = {}
-    orderBy: [ProductSizeOrderByInput!]! = []
+  attributes(
+    where: AttributeWhereInput! = {}
+    orderBy: [AttributeOrderByInput!]! = []
     take: Int
     skip: Int! = 0
-  ): [ProductSize!]
-  productSize(where: ProductSizeWhereUniqueInput!): ProductSize
-  productSizesCount(where: ProductSizeWhereInput! = {}): Int
+  ): [Attribute!]
+  attribute(where: AttributeWhereUniqueInput!): Attribute
+  attributesCount(where: AttributeWhereInput! = {}): Int
+  productAttributes(
+    where: ProductAttributeWhereInput! = {}
+    orderBy: [ProductAttributeOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [ProductAttribute!]
+  productAttribute(where: ProductAttributeWhereUniqueInput!): ProductAttribute
+  productAttributesCount(where: ProductAttributeWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
