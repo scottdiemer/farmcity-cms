@@ -132,14 +132,13 @@ type Product {
   name: String
   description: Product_description_Document
   productImage: ImageFieldOutput
-  attributes(
-    where: ProductAttributeWhereInput! = {}
-    orderBy: [ProductAttributeOrderByInput!]! = []
+  price(
+    where: VariantPriceWhereInput! = {}
+    orderBy: [VariantPriceOrderByInput!]! = []
     take: Int
     skip: Int! = 0
-  ): [ProductAttribute!]
-  attributesCount(where: ProductAttributeWhereInput! = {}): Int
-  price: Decimal
+  ): [VariantPrice!]
+  priceCount(where: VariantPriceWhereInput! = {}): Int
 }
 
 type Product_description_Document {
@@ -162,8 +161,6 @@ enum ImageExtension {
   webp
   gif
 }
-
-scalar Decimal
 
 input ProductWhereUniqueInput {
   id: ID
@@ -195,14 +192,166 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
-  attributes: ProductAttributeManyRelationFilter
-  price: DecimalNullableFilter
+  price: VariantPriceManyRelationFilter
 }
 
-input ProductAttributeManyRelationFilter {
-  every: ProductAttributeWhereInput
-  some: ProductAttributeWhereInput
-  none: ProductAttributeWhereInput
+input VariantPriceManyRelationFilter {
+  every: VariantPriceWhereInput
+  some: VariantPriceWhereInput
+  none: VariantPriceWhereInput
+}
+
+input ProductOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input ProductUpdateInput {
+  name: String
+  description: JSON
+  productImage: ImageFieldInput
+  price: VariantPriceRelateToManyForUpdateInput
+}
+
+input ImageFieldInput {
+  upload: Upload
+  ref: String
+}
+
+"""
+The `Upload` scalar type represents a file upload.
+"""
+scalar Upload
+
+input VariantPriceRelateToManyForUpdateInput {
+  disconnect: [VariantPriceWhereUniqueInput!]
+  set: [VariantPriceWhereUniqueInput!]
+  create: [VariantPriceCreateInput!]
+  connect: [VariantPriceWhereUniqueInput!]
+}
+
+input ProductUpdateArgs {
+  where: ProductWhereUniqueInput!
+  data: ProductUpdateInput!
+}
+
+input ProductCreateInput {
+  name: String
+  description: JSON
+  productImage: ImageFieldInput
+  price: VariantPriceRelateToManyForCreateInput
+}
+
+input VariantPriceRelateToManyForCreateInput {
+  create: [VariantPriceCreateInput!]
+  connect: [VariantPriceWhereUniqueInput!]
+}
+
+type Variant {
+  id: ID!
+  name: String
+}
+
+input VariantWhereUniqueInput {
+  id: ID
+}
+
+input VariantWhereInput {
+  AND: [VariantWhereInput!]
+  OR: [VariantWhereInput!]
+  NOT: [VariantWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input VariantOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input VariantUpdateInput {
+  name: String
+}
+
+input VariantUpdateArgs {
+  where: VariantWhereUniqueInput!
+  data: VariantUpdateInput!
+}
+
+input VariantCreateInput {
+  name: String
+}
+
+type ProductVariant {
+  id: ID!
+  variant: Variant
+  value: String
+}
+
+input ProductVariantWhereUniqueInput {
+  id: ID
+  value: String
+}
+
+input ProductVariantWhereInput {
+  AND: [ProductVariantWhereInput!]
+  OR: [ProductVariantWhereInput!]
+  NOT: [ProductVariantWhereInput!]
+  id: IDFilter
+  variant: VariantWhereInput
+  value: StringFilter
+}
+
+input ProductVariantOrderByInput {
+  id: OrderDirection
+  value: OrderDirection
+}
+
+input ProductVariantUpdateInput {
+  variant: VariantRelateToOneForUpdateInput
+  value: String
+}
+
+input VariantRelateToOneForUpdateInput {
+  create: VariantCreateInput
+  connect: VariantWhereUniqueInput
+  disconnect: Boolean
+}
+
+input ProductVariantUpdateArgs {
+  where: ProductVariantWhereUniqueInput!
+  data: ProductVariantUpdateInput!
+}
+
+input ProductVariantCreateInput {
+  variant: VariantRelateToOneForCreateInput
+  value: String
+}
+
+input VariantRelateToOneForCreateInput {
+  create: VariantCreateInput
+  connect: VariantWhereUniqueInput
+}
+
+type VariantPrice {
+  id: ID!
+  variant: ProductVariant
+  price: Decimal
+}
+
+scalar Decimal
+
+input VariantPriceWhereUniqueInput {
+  id: ID
+}
+
+input VariantPriceWhereInput {
+  AND: [VariantPriceWhereInput!]
+  OR: [VariantPriceWhereInput!]
+  NOT: [VariantPriceWhereInput!]
+  id: IDFilter
+  variant: ProductVariantWhereInput
+  price: DecimalNullableFilter
 }
 
 input DecimalNullableFilter {
@@ -216,139 +365,35 @@ input DecimalNullableFilter {
   not: DecimalNullableFilter
 }
 
-input ProductOrderByInput {
+input VariantPriceOrderByInput {
   id: OrderDirection
-  name: OrderDirection
   price: OrderDirection
 }
 
-input ProductUpdateInput {
-  name: String
-  description: JSON
-  productImage: ImageFieldInput
-  attributes: ProductAttributeRelateToManyForUpdateInput
+input VariantPriceUpdateInput {
+  variant: ProductVariantRelateToOneForUpdateInput
   price: Decimal
 }
 
-input ImageFieldInput {
-  upload: Upload
-  ref: String
-}
-
-"""
-The `Upload` scalar type represents a file upload.
-"""
-scalar Upload
-
-input ProductAttributeRelateToManyForUpdateInput {
-  disconnect: [ProductAttributeWhereUniqueInput!]
-  set: [ProductAttributeWhereUniqueInput!]
-  create: [ProductAttributeCreateInput!]
-  connect: [ProductAttributeWhereUniqueInput!]
-}
-
-input ProductUpdateArgs {
-  where: ProductWhereUniqueInput!
-  data: ProductUpdateInput!
-}
-
-input ProductCreateInput {
-  name: String
-  description: JSON
-  productImage: ImageFieldInput
-  attributes: ProductAttributeRelateToManyForCreateInput
-  price: Decimal
-}
-
-input ProductAttributeRelateToManyForCreateInput {
-  create: [ProductAttributeCreateInput!]
-  connect: [ProductAttributeWhereUniqueInput!]
-}
-
-type Attribute {
-  id: ID!
-  name: String
-}
-
-input AttributeWhereUniqueInput {
-  id: ID
-}
-
-input AttributeWhereInput {
-  AND: [AttributeWhereInput!]
-  OR: [AttributeWhereInput!]
-  NOT: [AttributeWhereInput!]
-  id: IDFilter
-  name: StringFilter
-}
-
-input AttributeOrderByInput {
-  id: OrderDirection
-  name: OrderDirection
-}
-
-input AttributeUpdateInput {
-  name: String
-}
-
-input AttributeUpdateArgs {
-  where: AttributeWhereUniqueInput!
-  data: AttributeUpdateInput!
-}
-
-input AttributeCreateInput {
-  name: String
-}
-
-type ProductAttribute {
-  id: ID!
-  attribute: Attribute
-  value: String
-}
-
-input ProductAttributeWhereUniqueInput {
-  id: ID
-  value: String
-}
-
-input ProductAttributeWhereInput {
-  AND: [ProductAttributeWhereInput!]
-  OR: [ProductAttributeWhereInput!]
-  NOT: [ProductAttributeWhereInput!]
-  id: IDFilter
-  attribute: AttributeWhereInput
-  value: StringFilter
-}
-
-input ProductAttributeOrderByInput {
-  id: OrderDirection
-  value: OrderDirection
-}
-
-input ProductAttributeUpdateInput {
-  attribute: AttributeRelateToOneForUpdateInput
-  value: String
-}
-
-input AttributeRelateToOneForUpdateInput {
-  create: AttributeCreateInput
-  connect: AttributeWhereUniqueInput
+input ProductVariantRelateToOneForUpdateInput {
+  create: ProductVariantCreateInput
+  connect: ProductVariantWhereUniqueInput
   disconnect: Boolean
 }
 
-input ProductAttributeUpdateArgs {
-  where: ProductAttributeWhereUniqueInput!
-  data: ProductAttributeUpdateInput!
+input VariantPriceUpdateArgs {
+  where: VariantPriceWhereUniqueInput!
+  data: VariantPriceUpdateInput!
 }
 
-input ProductAttributeCreateInput {
-  attribute: AttributeRelateToOneForCreateInput
-  value: String
+input VariantPriceCreateInput {
+  variant: ProductVariantRelateToOneForCreateInput
+  price: Decimal
 }
 
-input AttributeRelateToOneForCreateInput {
-  create: AttributeCreateInput
-  connect: AttributeWhereUniqueInput
+input ProductVariantRelateToOneForCreateInput {
+  create: ProductVariantCreateInput
+  connect: ProductVariantWhereUniqueInput
 }
 
 """
@@ -375,32 +420,35 @@ type Mutation {
   updateProducts(data: [ProductUpdateArgs!]!): [Product]
   deleteProduct(where: ProductWhereUniqueInput!): Product
   deleteProducts(where: [ProductWhereUniqueInput!]!): [Product]
-  createAttribute(data: AttributeCreateInput!): Attribute
-  createAttributes(data: [AttributeCreateInput!]!): [Attribute]
-  updateAttribute(
-    where: AttributeWhereUniqueInput!
-    data: AttributeUpdateInput!
-  ): Attribute
-  updateAttributes(data: [AttributeUpdateArgs!]!): [Attribute]
-  deleteAttribute(where: AttributeWhereUniqueInput!): Attribute
-  deleteAttributes(where: [AttributeWhereUniqueInput!]!): [Attribute]
-  createProductAttribute(data: ProductAttributeCreateInput!): ProductAttribute
-  createProductAttributes(
-    data: [ProductAttributeCreateInput!]!
-  ): [ProductAttribute]
-  updateProductAttribute(
-    where: ProductAttributeWhereUniqueInput!
-    data: ProductAttributeUpdateInput!
-  ): ProductAttribute
-  updateProductAttributes(
-    data: [ProductAttributeUpdateArgs!]!
-  ): [ProductAttribute]
-  deleteProductAttribute(
-    where: ProductAttributeWhereUniqueInput!
-  ): ProductAttribute
-  deleteProductAttributes(
-    where: [ProductAttributeWhereUniqueInput!]!
-  ): [ProductAttribute]
+  createVariant(data: VariantCreateInput!): Variant
+  createVariants(data: [VariantCreateInput!]!): [Variant]
+  updateVariant(
+    where: VariantWhereUniqueInput!
+    data: VariantUpdateInput!
+  ): Variant
+  updateVariants(data: [VariantUpdateArgs!]!): [Variant]
+  deleteVariant(where: VariantWhereUniqueInput!): Variant
+  deleteVariants(where: [VariantWhereUniqueInput!]!): [Variant]
+  createProductVariant(data: ProductVariantCreateInput!): ProductVariant
+  createProductVariants(data: [ProductVariantCreateInput!]!): [ProductVariant]
+  updateProductVariant(
+    where: ProductVariantWhereUniqueInput!
+    data: ProductVariantUpdateInput!
+  ): ProductVariant
+  updateProductVariants(data: [ProductVariantUpdateArgs!]!): [ProductVariant]
+  deleteProductVariant(where: ProductVariantWhereUniqueInput!): ProductVariant
+  deleteProductVariants(
+    where: [ProductVariantWhereUniqueInput!]!
+  ): [ProductVariant]
+  createVariantPrice(data: VariantPriceCreateInput!): VariantPrice
+  createVariantPrices(data: [VariantPriceCreateInput!]!): [VariantPrice]
+  updateVariantPrice(
+    where: VariantPriceWhereUniqueInput!
+    data: VariantPriceUpdateInput!
+  ): VariantPrice
+  updateVariantPrices(data: [VariantPriceUpdateArgs!]!): [VariantPrice]
+  deleteVariantPrice(where: VariantPriceWhereUniqueInput!): VariantPrice
+  deleteVariantPrices(where: [VariantPriceWhereUniqueInput!]!): [VariantPrice]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -447,22 +495,30 @@ type Query {
   ): [Product!]
   product(where: ProductWhereUniqueInput!): Product
   productsCount(where: ProductWhereInput! = {}): Int
-  attributes(
-    where: AttributeWhereInput! = {}
-    orderBy: [AttributeOrderByInput!]! = []
+  variants(
+    where: VariantWhereInput! = {}
+    orderBy: [VariantOrderByInput!]! = []
     take: Int
     skip: Int! = 0
-  ): [Attribute!]
-  attribute(where: AttributeWhereUniqueInput!): Attribute
-  attributesCount(where: AttributeWhereInput! = {}): Int
-  productAttributes(
-    where: ProductAttributeWhereInput! = {}
-    orderBy: [ProductAttributeOrderByInput!]! = []
+  ): [Variant!]
+  variant(where: VariantWhereUniqueInput!): Variant
+  variantsCount(where: VariantWhereInput! = {}): Int
+  productVariants(
+    where: ProductVariantWhereInput! = {}
+    orderBy: [ProductVariantOrderByInput!]! = []
     take: Int
     skip: Int! = 0
-  ): [ProductAttribute!]
-  productAttribute(where: ProductAttributeWhereUniqueInput!): ProductAttribute
-  productAttributesCount(where: ProductAttributeWhereInput! = {}): Int
+  ): [ProductVariant!]
+  productVariant(where: ProductVariantWhereUniqueInput!): ProductVariant
+  productVariantsCount(where: ProductVariantWhereInput! = {}): Int
+  variantPrices(
+    where: VariantPriceWhereInput! = {}
+    orderBy: [VariantPriceOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [VariantPrice!]
+  variantPrice(where: VariantPriceWhereUniqueInput!): VariantPrice
+  variantPricesCount(where: VariantPriceWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }

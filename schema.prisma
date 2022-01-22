@@ -21,31 +21,40 @@ model User {
 }
 
 model Product {
-  id                     String             @id @default(cuid())
-  name                   String             @default("")
-  description            Json               @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  id                     String         @id @default(cuid())
+  name                   String         @default("")
+  description            Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   productImage_filesize  Int?
   productImage_extension String?
   productImage_width     Int?
   productImage_height    Int?
   productImage_mode      String?
   productImage_id        String?
-  attributes             ProductAttribute[] @relation("Product_attributes")
-  price                  Decimal?           @map("product_price") @postgresql.Decimal(7, 2)
+  price                  VariantPrice[] @relation("Product_price")
 }
 
-model Attribute {
-  id                              String             @id @default(cuid())
-  name                            String             @default("")
-  from_ProductAttribute_attribute ProductAttribute[] @relation("ProductAttribute_attribute")
+model Variant {
+  id                          String           @id @default(cuid())
+  name                        String           @default("")
+  from_ProductVariant_variant ProductVariant[] @relation("ProductVariant_variant")
 }
 
-model ProductAttribute {
-  id                      String     @id @default(cuid())
-  attribute               Attribute? @relation("ProductAttribute_attribute", fields: [attributeId], references: [id])
-  attributeId             String?    @map("attribute")
-  value                   String     @unique @default("")
-  from_Product_attributes Product[]  @relation("Product_attributes")
+model ProductVariant {
+  id                        String         @id @default(cuid())
+  variant                   Variant?       @relation("ProductVariant_variant", fields: [variantId], references: [id])
+  variantId                 String?        @map("variant")
+  value                     String         @unique @default("")
+  from_VariantPrice_variant VariantPrice[] @relation("VariantPrice_variant")
 
-  @@index([attributeId])
+  @@index([variantId])
+}
+
+model VariantPrice {
+  id                 String          @id @default(cuid())
+  variant            ProductVariant? @relation("VariantPrice_variant", fields: [variantId], references: [id])
+  variantId          String?         @map("variant")
+  price              Decimal?        @postgresql.Decimal(7, 2)
+  from_Product_price Product[]       @relation("Product_price")
+
+  @@index([variantId])
 }
