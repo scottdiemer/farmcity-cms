@@ -38,10 +38,11 @@ export const lists: Lists = {
       }),
       status: select({
         options: [
-          { label: 'Active', value: 'active'},
-          { label: 'Inactive', value: 'inactive'},
+          { label: 'Draft', value: 'draft'},
+          { label: 'Enable', value: 'enable'},
+          { label: 'Disable', value: 'disable'},
         ],
-        defaultValue: 'inactive',
+        defaultValue: 'draft',
         ui: { displayMode: 'segmented-control'},
       }),
       productImage: image(),
@@ -49,8 +50,13 @@ export const lists: Lists = {
         ref: 'VariantPrice',
         many: true,
         ui: {
-          labelField: 'variant'
-        },
+          displayMode: 'cards',
+          cardFields: ['variant', 'price'],
+          linkToItem: true,
+          inlineCreate: { fields: ['variant', 'price']},
+          inlineEdit: { fields: ['variant', 'price']},
+          inlineConnect: true,
+        }
       }),
    },
   }),
@@ -67,6 +73,15 @@ export const lists: Lists = {
       }),
       value: text({isIndexed: 'unique'})
     },
+    ui: {
+      labelField: 'value',
+      listView: {
+        initialColumns: [
+          "variant",
+          "value",
+        ]
+      }
+    }
   }),
   VariantPrice: list({
     fields: {
@@ -78,6 +93,15 @@ export const lists: Lists = {
         precision: 7,
         scale: 2,
       }),
+    },
+    ui: {
+      labelField: 'price',
+      listView: {
+        initialColumns: [
+          "variant",
+          "price",
+        ]
+      }
     }
   })
 }  
