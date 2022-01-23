@@ -6,6 +6,7 @@ import {
   password,
   image,
   decimal,
+  select,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { Lists } from '.keystone/types';
@@ -35,11 +36,22 @@ export const lists: Lists = {
           [1, 1, 1],
         ],
       }),
+      status: select({
+        options: [
+          { label: 'Active', value: 'active'},
+          { label: 'Inactive', value: 'inactive'},
+        ],
+        defaultValue: 'inactive',
+        ui: { displayMode: 'segmented-control'},
+      }),
       productImage: image(),
       price: relationship({
         ref: 'VariantPrice',
         many: true,
-      })
+        ui: {
+          labelField: 'variant'
+        },
+      }),
    },
   }),
   Variant: list({

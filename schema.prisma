@@ -24,6 +24,7 @@ model Product {
   id                     String         @id @default(cuid())
   name                   String         @default("")
   description            Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
+  status                 String?        @default("inactive")
   productImage_filesize  Int?
   productImage_extension String?
   productImage_width     Int?

@@ -131,6 +131,7 @@ type Product {
   id: ID!
   name: String
   description: Product_description_Document
+  status: String
   productImage: ImageFieldOutput
   price(
     where: VariantPriceWhereInput! = {}
@@ -192,7 +193,37 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
+  status: StringNullableFilter
   price: VariantPriceManyRelationFilter
+}
+
+input StringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  mode: QueryMode
+  not: NestedStringNullableFilter
+}
+
+input NestedStringNullableFilter {
+  equals: String
+  in: [String!]
+  notIn: [String!]
+  lt: String
+  lte: String
+  gt: String
+  gte: String
+  contains: String
+  startsWith: String
+  endsWith: String
+  not: NestedStringNullableFilter
 }
 
 input VariantPriceManyRelationFilter {
@@ -204,11 +235,13 @@ input VariantPriceManyRelationFilter {
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  status: OrderDirection
 }
 
 input ProductUpdateInput {
   name: String
   description: JSON
+  status: String
   productImage: ImageFieldInput
   price: VariantPriceRelateToManyForUpdateInput
 }
@@ -238,6 +271,7 @@ input ProductUpdateArgs {
 input ProductCreateInput {
   name: String
   description: JSON
+  status: String
   productImage: ImageFieldInput
   price: VariantPriceRelateToManyForCreateInput
 }
