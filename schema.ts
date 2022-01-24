@@ -7,6 +7,7 @@ import {
   image,
   decimal,
   select,
+  timestamp,
 } from '@keystone-6/core/fields';
 import { document } from '@keystone-6/fields-document';
 import { Lists } from '.keystone/types';
@@ -47,6 +48,29 @@ export const lists: Lists = {
       }),
       productImage: image(),
       price: relationship({
+        ref: 'VariantPrice',
+        many: true,
+        ui: {
+          displayMode: 'cards',
+          cardFields: ['variant', 'price'],
+          linkToItem: true,
+          inlineCreate: { fields: ['variant', 'price']},
+          inlineEdit: { fields: ['variant', 'price']},
+          inlineConnect: true,
+        }
+      }),
+      sale: select({
+        options: [
+          { label: 'Draft', value: 'draft'},
+          { label: 'Enable', value: 'enable'},
+          { label: 'Disable', value: 'disable'},
+        ],
+        defaultValue: 'draft',
+        ui: { displayMode: 'segmented-control'},
+      }),
+      saleStart: timestamp(),
+      saleEnd: timestamp(),
+      salePrice: relationship({
         ref: 'VariantPrice',
         many: true,
         ui: {
