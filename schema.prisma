@@ -31,11 +31,11 @@ model Product {
   productImage_height    Int?
   productImage_mode      String?
   productImage_id        String?
-  price                  VariantPrice[] @relation("Product_price")
+  prices                 VariantPrice[] @relation("Product_prices")
   sale                   String?        @default("draft")
   saleStart              DateTime?
   saleEnd                DateTime?
-  salePrice              VariantPrice[] @relation("Product_salePrice")
+  salePrices             VariantPrice[] @relation("Product_salePrices")
 }
 
 model Variant {
@@ -55,12 +55,12 @@ model ProductVariant {
 }
 
 model VariantPrice {
-  id                     String          @id @default(cuid())
-  variant                ProductVariant? @relation("VariantPrice_variant", fields: [variantId], references: [id])
-  variantId              String?         @map("variant")
-  price                  Decimal?        @postgresql.Decimal(7, 2)
-  from_Product_price     Product[]       @relation("Product_price")
-  from_Product_salePrice Product[]       @relation("Product_salePrice")
+  id                      String          @id @default(cuid())
+  variant                 ProductVariant? @relation("VariantPrice_variant", fields: [variantId], references: [id])
+  variantId               String?         @map("variant")
+  price                   Decimal?        @postgresql.Decimal(7, 2)
+  from_Product_prices     Product[]       @relation("Product_prices")
+  from_Product_salePrices Product[]       @relation("Product_salePrices")
 
   @@index([variantId])
 }

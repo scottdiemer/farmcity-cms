@@ -47,7 +47,7 @@ export const lists: Lists = {
         ui: { displayMode: 'segmented-control'},
       }),
       productImage: image(),
-      price: relationship({
+      prices: relationship({
         ref: 'VariantPrice',
         many: true,
         ui: {
@@ -70,7 +70,7 @@ export const lists: Lists = {
       }),
       saleStart: timestamp(),
       saleEnd: timestamp(),
-      salePrice: relationship({
+      salePrices: relationship({
         ref: 'VariantPrice',
         many: true,
         ui: {

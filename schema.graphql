@@ -133,23 +133,23 @@ type Product {
   description: Product_description_Document
   status: String
   productImage: ImageFieldOutput
-  price(
+  prices(
     where: VariantPriceWhereInput! = {}
     orderBy: [VariantPriceOrderByInput!]! = []
     take: Int
     skip: Int! = 0
   ): [VariantPrice!]
-  priceCount(where: VariantPriceWhereInput! = {}): Int
+  pricesCount(where: VariantPriceWhereInput! = {}): Int
   sale: String
   saleStart: DateTime
   saleEnd: DateTime
-  salePrice(
+  salePrices(
     where: VariantPriceWhereInput! = {}
     orderBy: [VariantPriceOrderByInput!]! = []
     take: Int
     skip: Int! = 0
   ): [VariantPrice!]
-  salePriceCount(where: VariantPriceWhereInput! = {}): Int
+  salePricesCount(where: VariantPriceWhereInput! = {}): Int
 }
 
 type Product_description_Document {
@@ -207,11 +207,11 @@ input ProductWhereInput {
   id: IDFilter
   name: StringFilter
   status: StringNullableFilter
-  price: VariantPriceManyRelationFilter
+  prices: VariantPriceManyRelationFilter
   sale: StringNullableFilter
   saleStart: DateTimeNullableFilter
   saleEnd: DateTimeNullableFilter
-  salePrice: VariantPriceManyRelationFilter
+  salePrices: VariantPriceManyRelationFilter
 }
 
 input StringNullableFilter {
@@ -274,11 +274,11 @@ input ProductUpdateInput {
   description: JSON
   status: String
   productImage: ImageFieldInput
-  price: VariantPriceRelateToManyForUpdateInput
+  prices: VariantPriceRelateToManyForUpdateInput
   sale: String
   saleStart: DateTime
   saleEnd: DateTime
-  salePrice: VariantPriceRelateToManyForUpdateInput
+  salePrices: VariantPriceRelateToManyForUpdateInput
 }
 
 input ImageFieldInput {
@@ -308,11 +308,11 @@ input ProductCreateInput {
   description: JSON
   status: String
   productImage: ImageFieldInput
-  price: VariantPriceRelateToManyForCreateInput
+  prices: VariantPriceRelateToManyForCreateInput
   sale: String
   saleStart: DateTime
   saleEnd: DateTime
-  salePrice: VariantPriceRelateToManyForCreateInput
+  salePrices: VariantPriceRelateToManyForCreateInput
 }
 
 input VariantPriceRelateToManyForCreateInput {
