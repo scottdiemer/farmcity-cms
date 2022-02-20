@@ -28,6 +28,7 @@ export const lists: Lists = {
   Product: list({
     fields: {
       name: text({ validation: { isRequired: true }}),
+      summary: text({ validation: { isRequired: true }, ui: { displayMode: 'textarea'}}),
       description: document({
         formatting: true,
         dividers: true,

@@ -130,6 +130,7 @@ input UserRelateToManyForCreateInput {
 type Product {
   id: ID!
   name: String
+  summary: String
   description: Product_description_Document
   status: String
   productImage: ImageFieldOutput
@@ -206,6 +207,7 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
+  summary: StringFilter
   status: StringNullableFilter
   prices: VariantPriceManyRelationFilter
   sale: StringNullableFilter
@@ -263,6 +265,7 @@ input DateTimeNullableFilter {
 input ProductOrderByInput {
   id: OrderDirection
   name: OrderDirection
+  summary: OrderDirection
   status: OrderDirection
   sale: OrderDirection
   saleStart: OrderDirection
@@ -271,6 +274,7 @@ input ProductOrderByInput {
 
 input ProductUpdateInput {
   name: String
+  summary: String
   description: JSON
   status: String
   productImage: ImageFieldInput
@@ -305,6 +309,7 @@ input ProductUpdateArgs {
 
 input ProductCreateInput {
   name: String
+  summary: String
   description: JSON
   status: String
   productImage: ImageFieldInput

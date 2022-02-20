@@ -23,6 +23,7 @@ model User {
 model Product {
   id                     String         @id @default(cuid())
   name                   String         @default("")
+  summary                String         @default("")
   description            Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   status                 String?        @default("draft")
   productImage_filesize  Int?
