@@ -7,6 +7,7 @@ You can find all the config options in our docs here: https://keystonejs.com/doc
 */
 
 import { config } from '@keystone-6/core';
+import { statelessSessions } from '@keystone-6/core/session';
 import 'dotenv/config'
 
 
@@ -21,8 +22,14 @@ export default withAuth(
   config({
     server: {
       port: 5000,
-      cors: { origin: ['http://localhost:3000'], credentials: true},
+      cors: { origin: ['http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
     },
+    session: statelessSessions({
+      secret: process.env.SESSION_SECRET,
+      maxAge: process.env.MAX_AGE,
+      secure: false,
+
+    }),
     // the db sets the database provider - we're using sqlite for the fastest startup experience
     db: {
       provider: 'postgresql',
