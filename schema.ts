@@ -28,6 +28,11 @@ export const lists: Lists = {
   Product: list({
     fields: {
       name: text({ validation: { isRequired: true }}),
+      manufacturer: relationship({
+        ref: 'Manufacturer',
+        many: false,
+        ui: { displayMode: 'select'},
+      }),
       summary: text({ validation: { isRequired: true }, ui: { displayMode: 'textarea'}}),
       description: document({
         formatting: true,
@@ -127,6 +132,11 @@ export const lists: Lists = {
           "price",
         ]
       }
+    }
+  }),
+  Manufacturer: list({
+    fields: {
+      name: text({ validation: { isRequired: true } }),
     }
   })
 }  

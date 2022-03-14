@@ -23,6 +23,8 @@ model User {
 model Product {
   id                     String         @id @default(cuid())
   name                   String         @default("")
+  manufacturer           Manufacturer?  @relation("Product_manufacturer", fields: [manufacturerId], references: [id])
+  manufacturerId         String?        @map("manufacturer")
   summary                String         @default("")
   description            Json           @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
   status                 String?        @default("draft")
@@ -37,6 +39,8 @@ model Product {
   saleStart              DateTime?
   saleEnd                DateTime?
   salePrices             VariantPrice[] @relation("Product_salePrices")
+
+  @@index([manufacturerId])
 }
 
 model Variant {
@@ -64,4 +68,10 @@ model VariantPrice {
   from_Product_salePrices Product[]       @relation("Product_salePrices")
 
   @@index([variantId])
+}
+
+model Manufacturer {
+  id                        String    @id @default(cuid())
+  name                      String    @default("")
+  from_Product_manufacturer Product[] @relation("Product_manufacturer")
 }

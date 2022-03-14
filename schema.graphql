@@ -130,6 +130,7 @@ input UserRelateToManyForCreateInput {
 type Product {
   id: ID!
   name: String
+  manufacturer: Manufacturer
   summary: String
   description: Product_description_Document
   status: String
@@ -207,6 +208,7 @@ input ProductWhereInput {
   NOT: [ProductWhereInput!]
   id: IDFilter
   name: StringFilter
+  manufacturer: ManufacturerWhereInput
   summary: StringFilter
   status: StringNullableFilter
   prices: VariantPriceManyRelationFilter
@@ -274,6 +276,7 @@ input ProductOrderByInput {
 
 input ProductUpdateInput {
   name: String
+  manufacturer: ManufacturerRelateToOneForUpdateInput
   summary: String
   description: JSON
   status: String
@@ -283,6 +286,12 @@ input ProductUpdateInput {
   saleStart: DateTime
   saleEnd: DateTime
   salePrices: VariantPriceRelateToManyForUpdateInput
+}
+
+input ManufacturerRelateToOneForUpdateInput {
+  create: ManufacturerCreateInput
+  connect: ManufacturerWhereUniqueInput
+  disconnect: Boolean
 }
 
 input ImageFieldInput {
@@ -309,6 +318,7 @@ input ProductUpdateArgs {
 
 input ProductCreateInput {
   name: String
+  manufacturer: ManufacturerRelateToOneForCreateInput
   summary: String
   description: JSON
   status: String
@@ -318,6 +328,11 @@ input ProductCreateInput {
   saleStart: DateTime
   saleEnd: DateTime
   salePrices: VariantPriceRelateToManyForCreateInput
+}
+
+input ManufacturerRelateToOneForCreateInput {
+  create: ManufacturerCreateInput
+  connect: ManufacturerWhereUniqueInput
 }
 
 input VariantPriceRelateToManyForCreateInput {
@@ -474,6 +489,41 @@ input ProductVariantRelateToOneForCreateInput {
   connect: ProductVariantWhereUniqueInput
 }
 
+type Manufacturer {
+  id: ID!
+  name: String
+}
+
+input ManufacturerWhereUniqueInput {
+  id: ID
+}
+
+input ManufacturerWhereInput {
+  AND: [ManufacturerWhereInput!]
+  OR: [ManufacturerWhereInput!]
+  NOT: [ManufacturerWhereInput!]
+  id: IDFilter
+  name: StringFilter
+}
+
+input ManufacturerOrderByInput {
+  id: OrderDirection
+  name: OrderDirection
+}
+
+input ManufacturerUpdateInput {
+  name: String
+}
+
+input ManufacturerUpdateArgs {
+  where: ManufacturerWhereUniqueInput!
+  data: ManufacturerUpdateInput!
+}
+
+input ManufacturerCreateInput {
+  name: String
+}
+
 """
 The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
 """
@@ -527,6 +577,15 @@ type Mutation {
   updateVariantPrices(data: [VariantPriceUpdateArgs!]!): [VariantPrice]
   deleteVariantPrice(where: VariantPriceWhereUniqueInput!): VariantPrice
   deleteVariantPrices(where: [VariantPriceWhereUniqueInput!]!): [VariantPrice]
+  createManufacturer(data: ManufacturerCreateInput!): Manufacturer
+  createManufacturers(data: [ManufacturerCreateInput!]!): [Manufacturer]
+  updateManufacturer(
+    where: ManufacturerWhereUniqueInput!
+    data: ManufacturerUpdateInput!
+  ): Manufacturer
+  updateManufacturers(data: [ManufacturerUpdateArgs!]!): [Manufacturer]
+  deleteManufacturer(where: ManufacturerWhereUniqueInput!): Manufacturer
+  deleteManufacturers(where: [ManufacturerWhereUniqueInput!]!): [Manufacturer]
   endSession: Boolean!
   authenticateUserWithPassword(
     email: String!
@@ -597,6 +656,14 @@ type Query {
   ): [VariantPrice!]
   variantPrice(where: VariantPriceWhereUniqueInput!): VariantPrice
   variantPricesCount(where: VariantPriceWhereInput! = {}): Int
+  manufacturers(
+    where: ManufacturerWhereInput! = {}
+    orderBy: [ManufacturerOrderByInput!]! = []
+    take: Int
+    skip: Int! = 0
+  ): [Manufacturer!]
+  manufacturer(where: ManufacturerWhereUniqueInput!): Manufacturer
+  manufacturersCount(where: ManufacturerWhereInput! = {}): Int
   keystone: KeystoneMeta!
   authenticatedItem: AuthenticatedItem
 }
