@@ -22,7 +22,7 @@ export default withAuth(
   config({
     server: {
       port: 5000,
-      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
+      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: false},
     },
     session: statelessSessions({
       secret: process.env.SESSION_SECRET,
