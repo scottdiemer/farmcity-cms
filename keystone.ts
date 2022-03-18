@@ -25,8 +25,8 @@ export default withAuth(
       cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
     },
     session: statelessSessions({
-      secret: process.env.SESSION_SECRET,
-      maxAge: process.env.MAX_AGE,
+      secret: process.env.SESSION_SECRET || "There should be a secret here!",
+      maxAge: 60 * 60 * 8,
       secure: true,
 
     }),
@@ -44,7 +44,6 @@ export default withAuth(
       isAccessAllowed: (context) => !!context.session?.data,
     },
     lists,
-    session,
     images: {
       upload: 'local',
       local: {
