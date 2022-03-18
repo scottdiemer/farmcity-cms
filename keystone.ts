@@ -22,7 +22,7 @@ export default withAuth(
   config({
     server: {
       port: 5000,
-      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: false},
+      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
     },
     session: statelessSessions({
       secret: process.env.SESSION_SECRET,
@@ -35,6 +35,9 @@ export default withAuth(
       provider: 'postgresql',
       url: `postgres://${process.env.DB_URL}`,
     },
+    graphql: {
+      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
+    }
     // This config allows us to set up features of the Admin UI https://keystonejs.com/docs/apis/config#ui
     ui: {
       // For our starter, we check that someone has session data before letting them see the Admin UI.
