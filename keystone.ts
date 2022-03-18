@@ -15,28 +15,24 @@ import 'dotenv/config'
 import { lists } from './schema';
 
 // Keystone auth is configured separately - check out the basic auth setup we are importing from our auth file.
-import { withAuth, session } from './auth';
+import { withAuth } from './auth';
+
+const session =  statelessSessions({
+      secret: process.env.SESSION_SECRET || "There should be a secret here!",
+      maxAge: 60 * 60 * 8,
+      secure: true,
+    })
 
 export default withAuth(
   // Using the config function helps typescript guide you to the available options.
   config({
     server: {
       port: 5000,
-      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
     },
-    session: statelessSessions({
-      secret: process.env.SESSION_SECRET || "There should be a secret here!",
-      maxAge: 60 * 60 * 8,
-      secure: true,
-
-    }),
     // the db sets the database provider - we're using sqlite for the fastest startup experience
     db: {
       provider: 'postgresql',
       url: `postgres://${process.env.DB_URL}`,
-    },
-    graphql: {
-      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
     },
     // This config allows us to set up features of the Admin UI https://keystonejs.com/docs/apis/config#ui
     ui: {
@@ -44,6 +40,7 @@ export default withAuth(
       isAccessAllowed: (context) => !!context.session?.data,
     },
     lists,
+    session,
     images: {
       upload: 'local',
       local: {
