@@ -37,7 +37,7 @@ export default withAuth(
     },
     graphql: {
       cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
-    }
+    },
     // This config allows us to set up features of the Admin UI https://keystonejs.com/docs/apis/config#ui
     ui: {
       // For our starter, we check that someone has session data before letting them see the Admin UI.
