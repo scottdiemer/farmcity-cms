@@ -28,7 +28,7 @@ export default withAuth(
   config({
     server: {
       port: 5000,
-      cors: { origin: true, credentials: true},
+      cors: { origin: ['http://127.0.0.1:3000', 'http://localhost:3000', 'https://farmcityfeed.com'], credentials: true},
     },
     // the db sets the database provider - we're using sqlite for the fastest startup experience
     db: {
