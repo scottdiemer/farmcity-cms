@@ -15,6 +15,7 @@ COPY --from=builder /app/node_modules ./node_modules
 # COPY --from=builder /app/public ./public
 COPY --from=builder /app/keystone.ts ./keystone.ts
 COPY --from=builder /app/schema.ts ./schema.ts
+COPY --from=builder /app/schema.prisma ./schema.prisma
 COPY --from=builder /app/.keystone ./.keystone
 COPY --from=builder /app/generated ./generated
 
