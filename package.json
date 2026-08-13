@@ -8,9 +8,9 @@
     "build": "keystone build"
   },
   "dependencies": {
-    "@keystone-6/auth": "^10.0.1",
-    "@keystone-6/core": "^8.0.2",
-    "@keystone-6/fields-document": "^11.0.1",
+    "@keystone-6/auth": "^10.0.2",
+    "@keystone-6/core": "^8.0.4",
+    "@keystone-6/fields-document": "^11.0.2",
     "@prisma/adapter-better-sqlite3": "^7.9.0",
     "@prisma/adapter-pg": "^7.9.1",
     "@prisma/client": "^7.9.0",

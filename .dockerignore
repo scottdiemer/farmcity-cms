@@ -1,0 +1,10 @@
+node_modules
+.keystone
+.git
+.gitignore
+.env
+.env.*
+*.dump
+*.backup
+*.log
+public/images

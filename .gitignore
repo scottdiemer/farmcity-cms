@@ -5,3 +5,5 @@ keystone.db
 *.log
 .env*
 *.backup
+*.dump
+public/

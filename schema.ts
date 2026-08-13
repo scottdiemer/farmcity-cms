@@ -1,4 +1,7 @@
 import { list } from "@keystone-6/core";
+import fs from "node:fs";
+import path from "node:path";
+
 const allowAll = {
   operation: {
     query: () => true,
@@ -26,13 +29,20 @@ export const lists: Lists = {
     fields: {
       name: text({ validation: { isRequired: true } }),
       email: text({
-        validation: { isRequired: true },
+        validation: {
+          isRequired: true,
+          match: {
+            regex: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+            explanation: "Please provide a valid email address.",
+          },
+        },
         isIndexed: "unique",
         isFilterable: true,
       }),
       password: password({ validation: { isRequired: true } }),
     },
   }),
+
   Product: list({
     access: allowAll,
     fields: {
@@ -64,7 +74,44 @@ export const lists: Lists = {
         defaultValue: "draft",
         ui: { displayMode: "segmented-control" },
       }),
-      productImage: image({ storage: "local_images" }),
+
+      productImage: image({
+        storage: {
+          async put(key, stream) {
+            const imageDirectory = path.resolve(process.cwd(), "public/images");
+
+            await fs.promises.mkdir(imageDirectory, {
+              recursive: true,
+            });
+
+            const filePath = path.join(imageDirectory, key);
+
+            await new Promise<void>((resolve, reject) => {
+              const writeStream = fs.createWriteStream(filePath);
+
+              stream.pipe(writeStream);
+
+              writeStream.on("finish", resolve);
+              writeStream.on("error", reject);
+              stream.on("error", reject);
+            });
+          },
+
+          async delete(key) {
+            const imageDirectory = path.resolve(process.cwd(), "public/images");
+
+            const filePath = path.join(imageDirectory, key);
+
+            await fs.promises.unlink(filePath).catch(() => {});
+          },
+
+          url(key) {
+            const baseUrl = process.env.BACKEND_URL || "http://localhost:5000";
+
+            return `${baseUrl.replace(/\/$/, "")}/images/${encodeURIComponent(key)}`;
+          },
+        },
+      }),
       prices: relationship({
         ref: "VariantPrice",
         many: true,
@@ -101,13 +148,47 @@ export const lists: Lists = {
         },
       }),
     },
+    hooks: {
+      validateInput: ({ addValidationError, resolvedData, item }) => {
+        const start =
+          resolvedData.saleStart !== undefined
+            ? resolvedData.saleStart
+            : item?.saleStart;
+        const end =
+          resolvedData.saleEnd !== undefined
+            ? resolvedData.saleEnd
+            : item?.saleEnd;
+        const saleStatus =
+          resolvedData.sale !== undefined ? resolvedData.sale : item?.sale;
+
+        // 1. Ensure end date is not before start date
+        if (start && end) {
+          if (new Date(end) < new Date(start)) {
+            addValidationError(
+              "The sale end date cannot be before the sale start date.",
+            );
+          }
+        }
+
+        // 2. Ensure dates are provided if a sale is enabled
+        if (saleStatus === "enable") {
+          if (!start || !end) {
+            addValidationError(
+              "Both a sale start date and sale end date are required when the sale status is set to Enable.",
+            );
+          }
+        }
+      },
+    },
   }),
+
   Variant: list({
     access: allowAll,
     fields: {
-      name: text(),
+      name: text({ validation: { isRequired: true } }),
     },
   }),
+
   ProductVariant: list({
     access: allowAll,
     fields: {
@@ -115,7 +196,10 @@ export const lists: Lists = {
         ref: "Variant",
         many: false,
       }),
-      value: text({ isIndexed: "unique" }),
+      value: text({
+        validation: { isRequired: true },
+        isIndexed: "unique",
+      }),
     },
     ui: {
       labelField: "value",
@@ -124,6 +208,7 @@ export const lists: Lists = {
       },
     },
   }),
+
   VariantPrice: list({
     access: allowAll,
     fields: {
@@ -132,8 +217,17 @@ export const lists: Lists = {
         many: false,
       }),
       price: decimal({
+        validation: { isRequired: true },
         precision: 7,
         scale: 2,
+        hooks: {
+          validateInput: ({ addValidationError, resolvedData, fieldKey }) => {
+            const price = resolvedData[fieldKey];
+            if (price !== undefined && price !== null && Number(price) < 0) {
+              addValidationError("Price cannot be negative.");
+            }
+          },
+        },
       }),
     },
     ui: {
@@ -143,6 +237,7 @@ export const lists: Lists = {
       },
     },
   }),
+
   Manufacturer: list({
     access: allowAll,
     fields: {

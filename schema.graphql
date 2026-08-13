@@ -368,10 +368,10 @@ input VariantPriceWhereInput {
   NOT: [VariantPriceWhereInput!]
   id: IDFilter
   variant: ProductVariantWhereInput
-  price: DecimalNullableFilter
+  price: DecimalFilter
 }
 
-input DecimalNullableFilter {
+input DecimalFilter {
   equals: Decimal
   in: [Decimal!]
   notIn: [Decimal!]
@@ -379,7 +379,7 @@ input DecimalNullableFilter {
   lte: Decimal
   gt: Decimal
   gte: Decimal
-  not: DecimalNullableFilter
+  not: DecimalFilter
 }
 
 input VariantPriceOrderByInput {
